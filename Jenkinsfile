@@ -18,7 +18,11 @@ pipeline {
         }
         stage ('Deploy Frontend'){
             steps {
-                deploy adapters: [tomcat8(credentialsId: '4c973e5c-8adf-4cfb-a621-191b000e2233', path: '', url: 'http://172.31.93.3:8080/')], contextPath: 'tasks', war: 'target/tasks.war'
+                dir('frontend'){
+                    git 'https://github.com/gabrielhmc/tasks-frontend.git'
+                    sh 'mvn clean package -DskipTest=true'
+                    deploy adapters: [tomcat8(credentialsId: '4c973e5c-8adf-4cfb-a621-191b000e2233', path: '', url: 'http://172.31.93.3:8080/')], contextPath: 'tasks', war: 'target/tasks.war'
+                }                
             }
         }
     }
